@@ -9,8 +9,21 @@ namespace OpenBitcoin8333Port
     {
         static void Main()
         {
-            DoIt().Wait();
-            Console.WriteLine("Done!");
+            try
+            {
+                DoIt().Wait();
+                Console.WriteLine("Done!");
+            }
+            catch(AggregateException e)
+            {
+                var nfe = e.InnerException as NatDeviceNotFoundException; 
+                if(nfe != null)
+                {
+                    Console.WriteLine("No NAT device was found.");
+                    return;
+                }
+                throw;
+            }
         }
 
         private static async Task DoIt()
